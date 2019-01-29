@@ -261,7 +261,7 @@ class Executor:
         if sequence is not None:
             try:
                 future = client._pending_requests[sequence]
-            except IndexError:
+            except KeyError:
                 # The request was cancelled
                 pass
             else:
