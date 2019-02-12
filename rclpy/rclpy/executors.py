@@ -236,7 +236,12 @@ class Executor:
         await await_or_execute(tmr.callback)
 
     def _take_subscription(self, sub):
-        msg = _rclpy.rclpy_take(sub.subscription_handle, sub.msg_type)
+        if str(sub.msg_type.__class__) == "<class 'google.protobuf.pyext.cpp_message.GeneratedProtocolMessageType'>":
+            raw = _rclpy.rclpy_take_serialized(sub.subscription_handle, sub.msg_type)
+            msg = sub.msg_type()
+            msg.ParseFromString(raw)
+        else:
+            msg = _rclpy.rclpy_take(sub.subscription_handle, sub.msg_type)
         return msg
 
     async def _execute_subscription(self, sub, msg):

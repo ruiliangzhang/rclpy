@@ -25,4 +25,8 @@ class Publisher:
         self.node_handle = node_handle
 
     def publish(self, msg):
-        _rclpy.rclpy_publish(self.publisher_handle, msg)
+        if str(self.msg_type.__class__) == "<class 'google.protobuf.pyext.cpp_message.GeneratedProtocolMessageType'>":
+            raw = msg.SerializeToString()
+            _rclpy.rclpy_publish_serialized(self.publisher_handle, raw)
+        else:
+            _rclpy.rclpy_publish(self.publisher_handle, msg)
