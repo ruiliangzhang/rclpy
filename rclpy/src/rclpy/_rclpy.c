@@ -2479,6 +2479,7 @@ rclpy_take_serialized(PyObject * Py_UNUSED(self), PyObject * args)
   if (ret != RCL_RET_SUBSCRIPTION_TAKE_FAILED) {
     PyObject *pytaken_msg;
     pytaken_msg = PyBytes_FromStringAndSize(serialized_message.buffer, serialized_message.buffer_length);
+    free(serialized_message.buffer);
     return pytaken_msg;
   }
 
