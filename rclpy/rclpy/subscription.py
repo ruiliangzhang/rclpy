@@ -29,5 +29,5 @@ class Subscription:
         self._executor_event = False
         self.qos_profile = qos_profile
         self._use_proto_ = False
-        if str(self.msg_type.__class__) == "<class 'google.protobuf.pyext.cpp_message.GeneratedProtocolMessageType'>":
+        if hasattr(self.msg_type, '_use_proto_'):
             self._use_proto_ = True
