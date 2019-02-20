@@ -28,3 +28,6 @@ class Subscription:
         # True when the callback is ready to fire but has not been "taken" by an executor
         self._executor_event = False
         self.qos_profile = qos_profile
+        self._use_proto_ = False
+        if str(self.msg_type.__class__) == "<class 'google.protobuf.pyext.cpp_message.GeneratedProtocolMessageType'>":
+            self._use_proto_ = True

@@ -34,6 +34,9 @@ from rclpy.validate_topic_name import validate_topic_name
 
 
 def check_for_type_support(msg_type):
+    if hasattr(msg_type, '_use_proto_'):
+        return
+
     try:
         ts = msg_type.__class__._TYPE_SUPPORT
     except AttributeError as e:
