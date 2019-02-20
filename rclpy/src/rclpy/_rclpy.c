@@ -1058,6 +1058,11 @@ rclpy_create_publisher(PyObject * Py_UNUSED(self), PyObject * args)
 
   PyObject * pymetaclass = PyObject_GetAttrString(pymsg_type, "__class__");
 
+  int use_proto = PyObject_HasAttrString(pymsg_type, "_use_proto_");
+  if ( use_proto ) {
+      pymetaclass = pymsg_type;
+  }
+
   PyObject * pyts = PyObject_GetAttrString(pymetaclass, "_TYPE_SUPPORT");
 
   rosidl_message_type_support_t * ts =
@@ -1594,6 +1599,11 @@ rclpy_create_subscription(PyObject * Py_UNUSED(self), PyObject * args)
   }
 
   PyObject * pymetaclass = PyObject_GetAttrString(pymsg_type, "__class__");
+
+  int use_proto = PyObject_HasAttrString(pymsg_type, "_use_proto_");
+  if ( use_proto ) {
+      pymetaclass = pymsg_type;
+  }
 
   PyObject * pyts = PyObject_GetAttrString(pymetaclass, "_TYPE_SUPPORT");
 
