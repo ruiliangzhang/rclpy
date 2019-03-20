@@ -168,8 +168,11 @@ class Executor:
         return True
 
     def __del__(self):
+      try:
         if self._guard_condition is not None:
             _rclpy.rclpy_destroy_entity(self._guard_condition)
+      except:
+        pass
 
     def add_node(self, node):
         """
