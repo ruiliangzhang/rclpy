@@ -1615,6 +1615,16 @@ rclpy_create_subscription(PyObject * Py_UNUSED(self), PyObject * args)
   if (PyCapsule_IsValid(pyqos_profile, "rmw_qos_profile_t")) {
     void * p = PyCapsule_GetPointer(pyqos_profile, "rmw_qos_profile_t");
     rmw_qos_profile_t * qos_profile = (rmw_qos_profile_t *)p;
+
+    // As Qos durability makes sense only for Pub side in official ROS2,
+    // we use durability in Sub side for whether enable proto path.
+    // Note: The durability meaning must be consisitent with rmw_create_subscription.
+    if (use_proto) {
+        qos_profile->durability = 5;
+    } else {
+        qos_profile->durability = 6;
+    }
+
     subscription_ops.qos = *qos_profile;
     PyMem_Free(p);
     if (PyCapsule_SetPointer(pyqos_profile, Py_None)) {
