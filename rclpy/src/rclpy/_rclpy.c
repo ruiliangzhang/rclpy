@@ -1619,10 +1619,10 @@ rclpy_create_subscription(PyObject * Py_UNUSED(self), PyObject * args)
     // As Qos durability makes sense only for Pub side in official ROS2,
     // we use durability in Sub side for whether enable proto path.
     // Note: The durability meaning must be consisitent with rmw_create_subscription.
+    // default --> 2 (RMW_QOS_POLICY_DURABILITY_VOLATILE)
+    // proto --> 42
     if (use_proto) {
-        qos_profile->durability = 5;
-    } else {
-        qos_profile->durability = 6;
+        qos_profile->durability = 42;
     }
 
     subscription_ops.qos = *qos_profile;
