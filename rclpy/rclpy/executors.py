@@ -239,6 +239,9 @@ class Executor:
         await await_or_execute(tmr.callback)
 
     def _take_subscription(self, sub):
+        if sub.raw:
+            raw = _rclpy.rclpy_take_serialized(sub.subscription_handle, sub.msg_type);
+            return raw
         if sub._use_proto_:
             raw = _rclpy.rclpy_take_serialized(sub.subscription_handle, sub.msg_type)
             msg = sub.msg_type()

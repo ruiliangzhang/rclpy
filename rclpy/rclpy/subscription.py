@@ -17,7 +17,7 @@ class Subscription:
 
     def __init__(
             self, subscription_handle, subscription_pointer,
-            msg_type, topic, callback, callback_group, qos_profile, node_handle):
+            msg_type, topic, callback, callback_group, qos_profile, node_handle, raw):
         self.node_handle = node_handle
         self.subscription_handle = subscription_handle
         self.subscription_pointer = subscription_pointer
@@ -29,5 +29,7 @@ class Subscription:
         self._executor_event = False
         self.qos_profile = qos_profile
         self._use_proto_ = False
+        self.raw = raw
+
         if hasattr(self.msg_type, '_use_proto_'):
             self._use_proto_ = True
