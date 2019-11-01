@@ -109,18 +109,19 @@ class Node:
         expanded_topic_or_service_name = expand_topic_name(topic_or_service_name, name, namespace)
         validate_full_topic_name(expanded_topic_or_service_name, is_service=is_service)
 
-    def create_publisher(self, msg_type, topic, *, qos_profile=qos_profile_default):
+    def create_publisher(self, msg_type, topic, *, qos_profile=qos_profile_default, raw=False):
         # this line imports the typesupport for the message module if not already done
+        print('create_publisher raw', raw)
         check_for_type_support(msg_type)
         failed = False
         try:
             publisher_handle = _rclpy.rclpy_create_publisher(
-                self.handle, msg_type, topic, qos_profile.get_c_qos_profile())
+                self.handle, msg_type, topic, qos_profile.get_c_qos_profile(), raw)
         except ValueError:
             failed = True
         if failed:
             self._validate_topic_or_service_name(topic)
-        publisher = Publisher(publisher_handle, msg_type, topic, qos_profile, self.handle)
+        publisher = Publisher(publisher_handle, msg_type, topic, qos_profile, self.handle, raw)
         self.publishers.append(publisher)
         return publisher
 

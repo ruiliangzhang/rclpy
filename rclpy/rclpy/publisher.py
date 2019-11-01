@@ -17,17 +17,22 @@ from rclpy.impl.implementation_singleton import rclpy_implementation as _rclpy
 
 class Publisher:
 
-    def __init__(self, publisher_handle, msg_type, topic, qos_profile, node_handle):
+    def __init__(self, publisher_handle, msg_type, topic, qos_profile, node_handle, raw):
         self.publisher_handle = publisher_handle
         self.msg_type = msg_type
         self.topic = topic
         self.qos_profile = qos_profile
         self.node_handle = node_handle
         self._use_proto_ = False
+        self.raw = raw
         if hasattr(self.msg_type, '_use_proto_'):
             self._use_proto_ = True
 
     def publish(self, msg):
+        if self.raw:
+            assert isinstance(msg, bytes)
+            _rclpy.rclpy_publish_serialized(self.publisher_handle, msg)
+            return
         if self._use_proto_:
             raw = msg.SerializeToString()
             _rclpy.rclpy_publish_serialized(self.publisher_handle, raw)
