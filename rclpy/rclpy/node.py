@@ -111,7 +111,6 @@ class Node:
 
     def create_publisher(self, msg_type, topic, *, qos_profile=qos_profile_default, raw=False):
         # this line imports the typesupport for the message module if not already done
-        print('create_publisher raw', raw)
         check_for_type_support(msg_type)
         failed = False
         try:
