@@ -230,8 +230,11 @@ class Executor:
         return True
 
     def __del__(self):
-        if self._sigint_gc is not None:
-            self._sigint_gc.destroy()
+        try:
+            if self._sigint_gc is not None:
+                self._sigint_gc.destroy()
+        except:
+            pass
 
     def add_node(self, node: 'Node') -> bool:
         """
@@ -322,7 +325,15 @@ class Executor:
 
     def _take_subscription(self, sub):
         with sub.handle as capsule:
-            msg = _rclpy.rclpy_take(capsule, sub.msg_type, sub.raw)
+            if sub.raw:
+                raw = _rclpy.rclpy_take_serialized(capsule, sub.msg_type);
+                return raw
+            if sub._use_proto_:
+                raw_msg = _rclpy.rclpy_take_serialized(capsule, sub.msg_type)
+                msg = sub.msg_type()
+                msg.ParseFromString(raw_msg)
+            else:
+                msg = _rclpy.rclpy_take(capsule, sub.msg_type, sub.raw)
         return msg
 
     async def _execute_subscription(self, sub, msg):
